@@ -234,13 +234,9 @@ export function CostumeBarChart({ nodeId }: CostumeBarChartProps) {
       } else if (selectedTime === '3d') {
         from = new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000)
       } else if (selectedTime === '1w') {
-        from = new Date(now.getTime() - 6 * 24 * 60 * 60 * 1000)
+        from = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
       }
-      if (from) {
-        // For 1w and 3d, set to end of current day to avoid extra bar
-        const to = (selectedTime === '1w' || selectedTime === '3d') ? dateUtils.toDayjs(now).endOf('day').toDate() : now
-        setDateRange({ from, to })
-      }
+      if (from) setDateRange({ from, to: now })
     }
   }, [selectedTime, showCustomRange])
 
@@ -286,18 +282,9 @@ export function CostumeBarChart({ nodeId }: CostumeBarChartProps) {
             className="max-h-[300px] sm:max-h-[400px] min-h-[150px] sm:min-h-[200px]" 
           />
         ) : (
-          <div className="w-full max-w-7xl mx-auto">
-            <ChartContainer 
-              dir={'ltr'} 
-              config={chartConfig} 
-              className="max-h-[300px] sm:max-h-[400px] min-h-[150px] sm:min-h-[200px] w-full overflow-x-auto"
-            >
+          <ChartContainer dir={'ltr'} config={chartConfig} className="max-h-[300px] sm:max-h-[400px] min-h-[150px] sm:min-h-[200px] w-full">
             {chartData && chartData.length > 0 ? (
-              <BarChart 
-                accessibilityLayer 
-                data={chartData}
-                margin={{ top: 5, right: 10, left: 10, bottom: 5 }}
-              >
+              <BarChart accessibilityLayer data={chartData}>
                 <CartesianGrid direction={'ltr'} vertical={false} />
                 <XAxis 
                   direction={'ltr'} 
@@ -310,7 +297,6 @@ export function CostumeBarChart({ nodeId }: CostumeBarChartProps) {
                     fontSize: 8,
                     fontWeight: 500,
                   }}
-                  minTickGap={5}
                 />
                 <YAxis 
                   direction={'ltr'} 
@@ -337,7 +323,6 @@ export function CostumeBarChart({ nodeId }: CostumeBarChartProps) {
               />
             )}
           </ChartContainer>
-          </div>
         )}
       </CardContent>
     </Card>

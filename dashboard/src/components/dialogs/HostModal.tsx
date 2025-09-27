@@ -142,12 +142,6 @@ const ArrayInput = memo<ArrayInputProps>(({ field, placeholder, label, infoConte
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && inputValue.trim()) {
       e.preventDefault()
-      addItem()
-    }
-  }
-
-  const addItem = () => {
-    if (inputValue.trim()) {
       const currentValue = field.value || []
       const newValue = [...currentValue, inputValue.trim()]
       field.onChange(newValue)
@@ -178,7 +172,7 @@ const ArrayInput = memo<ArrayInputProps>(({ field, placeholder, label, infoConte
                 <Info className="h-4 w-4 text-muted-foreground" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[280px] p-3 sm:w-[320px]" side="top" align="start" sideOffset={5}>
+            <PopoverContent className="w-[280px] sm:w-[320px] p-3" side="top" align="start" sideOffset={5}>
               {infoContent}
             </PopoverContent>
           </Popover>
@@ -186,29 +180,41 @@ const ArrayInput = memo<ArrayInputProps>(({ field, placeholder, label, infoConte
       </div>
       <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
         <PopoverTrigger asChild>
-          <Button variant="outline" role="combobox" className="xs:max-w-[240px] h-auto w-full min-w-[200px] max-w-[200px] p-2 text-left sm:max-w-xs md:max-w-sm lg:max-w-md" title={displayValue}>
-            <span className={`truncate ${displayValue ? 'text-foreground' : 'text-muted-foreground'}`}>{displayValue || placeholder}</span>
+          <Button
+            variant="outline"
+            role="combobox"
+            className="w-full min-w-[200px] max-w-[200px] xs:max-w-[240px] sm:max-w-xs md:max-w-sm lg:max-w-md h-auto p-2 text-left"
+            title={displayValue}
+          >
+            <span className={`truncate ${displayValue ? 'text-foreground' : 'text-muted-foreground'}`}>
+              {displayValue || placeholder}
+            </span>
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="xs:max-w-[320px] w-full max-w-[280px] p-1 sm:max-w-xs md:max-w-sm lg:max-w-md" align="start">
-          <div className="max-h-64 space-y-2 overflow-y-auto pr-1">
-            {/* Input for adding new items with submit button */}
-            <div className="flex items-center gap-2">
-              <Input placeholder="Type and press Enter to add..." value={inputValue} onChange={e => setInputValue(e.target.value)} onKeyDown={handleKeyDown} className="flex-1 text-sm" />
-              <Button type="button" size="sm" variant="default" onClick={addItem} disabled={!inputValue.trim()} className="h-8 shrink-0 px-3 py-1">
-                <Plus className="h-4 w-4" />
-              </Button>
-            </div>
+        <PopoverContent className="w-full max-w-[280px] xs:max-w-[320px] sm:max-w-xs md:max-w-sm lg:max-w-md p-1" align="start">
+          <div className="max-h-64 overflow-y-auto space-y-2 pr-1">
+            {/* Input for adding new items */}
+            <Input
+              placeholder="Type and press Enter to add..."
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyDown={handleKeyDown}
+              className="w-full text-sm"
+            />
 
             {/* Selected items list */}
             {field.value && field.value.length > 0 && (
               <div className="space-y-1">
                 {field.value.map((item: string, index: number) => (
-                  <div key={index} className="xs:p-2 flex cursor-pointer items-center gap-2 rounded-sm p-1.5 hover:bg-accent" onClick={() => removeItem(index)}>
-                    <div className="flex h-4 w-4 items-center justify-center rounded-sm border border-primary bg-primary">
+                  <div
+                    key={index}
+                    className="flex items-center gap-2 p-1.5 xs:p-2 rounded-sm cursor-pointer hover:bg-accent"
+                    onClick={() => removeItem(index)}
+                  >
+                    <div className="flex items-center justify-center w-4 h-4 border rounded-sm bg-primary border-primary">
                       <X className="h-3 w-3 text-primary-foreground" />
                     </div>
-                    <span className="xs:text-sm flex-1 text-xs leading-tight">{item}</span>
+                    <span className="flex-1 text-xs xs:text-sm leading-tight">{item}</span>
                   </div>
                 ))}
               </div>
@@ -806,7 +812,14 @@ const HostModal: React.FC<HostModalProps> = ({ isDialogOpen, onOpenChange, onSub
                         </div>
                       )
 
-                      return <ArrayInput field={field} placeholder="example.com" label={t('hostsDialog.address')} infoContent={infoContent} />
+                      return (
+                        <ArrayInput
+                          field={field}
+                          placeholder="example.com"
+                          label={t('hostsDialog.address')}
+                          infoContent={infoContent}
+                        />
+                      )
                     }}
                   />
                 </div>
@@ -872,7 +885,14 @@ const HostModal: React.FC<HostModalProps> = ({ isDialogOpen, onOpenChange, onSub
                               </div>
                             )
 
-                            return <ArrayInput field={field} placeholder="example.com" label={t('hostsDialog.host')} infoContent={infoContent} />
+                            return (
+                              <ArrayInput
+                                field={field}
+                                placeholder="example.com"
+                                label={t('hostsDialog.host')}
+                                infoContent={infoContent}
+                              />
+                            )
                           }}
                         />
                         <FormField
@@ -982,7 +1002,7 @@ const HostModal: React.FC<HostModalProps> = ({ isDialogOpen, onOpenChange, onSub
                                 type="button"
                                 variant="ghost"
                                 size="icon"
-                                className="h-8 w-8 shrink-0 border-red-500/20 transition-colors hover:border-red-500 hover:bg-red-50 dark:hover:bg-red-950/20"
+                                className="h-8 w-8 shrink-0 border-red-500/20 hover:border-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors"
                                 onClick={() => {
                                   const currentHeaders = { ...form.getValues('http_headers') }
                                   delete currentHeaders[key]
@@ -1051,15 +1071,34 @@ const HostModal: React.FC<HostModalProps> = ({ isDialogOpen, onOpenChange, onSub
                         <FormField
                           control={form.control}
                           name="sni"
-                          render={({ field }) => {
-                            const infoContent = (
-                              <div className="space-y-1.5">
-                                <p className="text-[11px] text-muted-foreground">{t('hostsDialog.sni.info')}</p>
+                          render={({ field }) => (
+                            <FormItem>
+                              <div className="flex items-center gap-2">
+                                <FormLabel>{t('hostsDialog.sni')}</FormLabel>
+                                <Popover>
+                                  <PopoverTrigger asChild>
+                                    <Button type="button" variant="ghost" size="icon" className="h-4 w-4 p-0 hover:bg-transparent">
+                                      <Info className="h-4 w-4 text-muted-foreground" />
+                                    </Button>
+                                  </PopoverTrigger>
+                                  <PopoverContent className="w-[320px] p-3" side="right" align="start" sideOffset={5}>
+                                    <p className="text-[11px] text-muted-foreground">{t('hostsDialog.sni.info')}</p>
+                                  </PopoverContent>
+                                </Popover>
                               </div>
-                            )
-
-                            return <ArrayInput field={field} placeholder={t('hostsDialog.sniPlaceholder')} label={t('hostsDialog.sni')} infoContent={infoContent} />
-                          }}
+                              <FormControl>
+                                <Input
+                                  placeholder={t('hostsDialog.sniPlaceholder')}
+                                  value={Array.isArray(field.value) ? field.value.join(',') : field.value || ''}
+                                  onChange={(e) => {
+                                    const value = e.target.value
+                                    field.onChange(value ? value.split(',').map(s => s.trim()) : [])
+                                  }}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
                         />
                       </div>
 
@@ -1072,15 +1111,19 @@ const HostModal: React.FC<HostModalProps> = ({ isDialogOpen, onOpenChange, onSub
                               <FormLabel>{t('hostsDialog.alpn')}</FormLabel>
                               <Popover>
                                 <PopoverTrigger asChild>
-                                  <Button variant="outline" role="combobox" className="h-auto min-h-[40px] w-full justify-between p-2">
-                                    <div className="flex flex-1 flex-wrap gap-2">
+                                  <Button
+                                    variant="outline"
+                                    role="combobox"
+                                    className="w-full justify-between min-h-[40px] h-auto p-2"
+                                  >
+                                    <div className="flex flex-wrap gap-2 flex-1">
                                       {field.value && field.value.length > 0 ? (
                                         field.value.map((protocol: string) => (
                                           <Badge key={protocol} variant="secondary" className="flex items-center gap-1">
                                             {protocol}
                                             <X
                                               className="h-3 w-3 cursor-pointer hover:text-destructive"
-                                              onClick={e => {
+                                              onClick={(e) => {
                                                 e.stopPropagation()
                                                 const newValue = (field.value || []).filter((p: string) => p !== protocol)
                                                 field.onChange(newValue)
@@ -1096,19 +1139,26 @@ const HostModal: React.FC<HostModalProps> = ({ isDialogOpen, onOpenChange, onSub
                                 </PopoverTrigger>
                                 <PopoverContent className="w-full p-1" align="start">
                                   <div className="space-y-1">
-                                    {['h3', 'h2', 'http/1.1'].map(protocol => {
+                                    {['h3', 'h2', 'http/1.1'].map((protocol) => {
                                       const isSelected = field.value?.includes(protocol)
                                       return (
                                         <div
                                           key={protocol}
                                           onClick={() => {
                                             const currentValue = field.value || []
-                                            const newValue = isSelected ? currentValue.filter((p: string) => p !== protocol) : [...currentValue, protocol]
+                                            const newValue = isSelected
+                                              ? currentValue.filter((p: string) => p !== protocol)
+                                              : [...currentValue, protocol]
                                             field.onChange(newValue)
                                           }}
-                                          className="flex cursor-pointer items-center gap-2 rounded-sm p-2 hover:bg-accent"
+                                          className="flex items-center gap-2 p-2 rounded-sm cursor-pointer hover:bg-accent"
                                         >
-                                          <div className={cn('mr-2 flex h-4 w-4 items-center justify-center rounded-sm border', isSelected ? 'border-primary bg-primary' : 'border-muted')}>
+                                          <div
+                                            className={cn(
+                                              'mr-2 h-4 w-4 border rounded-sm flex items-center justify-center',
+                                              isSelected ? 'bg-primary border-primary' : 'border-muted'
+                                            )}
+                                          >
                                             {isSelected && <X className="h-3 w-3 text-primary-foreground" />}
                                           </div>
                                           {protocol}
@@ -1230,11 +1280,11 @@ const HostModal: React.FC<HostModalProps> = ({ isDialogOpen, onOpenChange, onSub
                   <AccordionContent>
                     <div className="space-y-4">
                       <Tabs defaultValue="xhttp" className="w-full">
-                        <div className="flex w-full items-center justify-center">
-                          <TabsList className="mb-4 flex h-auto w-full flex-wrap gap-1 overflow-x-auto px-1 sm:w-fit sm:flex-nowrap sm:gap-4">
+                        <div className='w-full flex items-center justify-center'>
+                          <TabsList className="mb-4 flex h-auto w-full sm:w-fit flex-wrap gap-1 overflow-x-auto px-1 sm:flex-nowrap sm:gap-4">
                             <TabsTrigger className="flex-1 px-1 text-xs sm:flex-none sm:px-2 sm:text-sm" value="xhttp">
                               <span className="hidden sm:inline">XHTTP</span>
-                              <span className="text-[11.5px] sm:hidden">XHTTP</span>
+                              <span className="sm:hidden text-[11.5px]">XHTTP</span>
                             </TabsTrigger>
                             <TabsTrigger className="flex-1 px-1 text-xs sm:flex-none sm:px-2 sm:text-sm" value="grpc">
                               <span className="hidden sm:inline">gRPC</span>
@@ -1429,8 +1479,8 @@ const HostModal: React.FC<HostModalProps> = ({ isDialogOpen, onOpenChange, onSub
                                         {...field}
                                         value={field.value ?? ''} // Ensure controlled component, handle null/undefined
                                         onChange={e => {
-                                          const value = e.target.value
-                                          field.onChange(value === '' ? null : parseInt(value, 10))
+                                          const value = e.target.value;
+                                          field.onChange(value === '' ? null : parseInt(value, 10));
                                         }}
                                       />
                                     </FormControl>
@@ -1847,7 +1897,7 @@ const HostModal: React.FC<HostModalProps> = ({ isDialogOpen, onOpenChange, onSub
                                         type="button"
                                         variant="ghost"
                                         size="icon"
-                                        className="h-8 w-8 shrink-0 border-red-500/20 transition-colors hover:border-red-500 hover:bg-red-50 dark:hover:bg-red-950/20"
+                                        className="h-8 w-8 shrink-0 border-red-500/20 hover:border-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors"
                                         onClick={() => {
                                           const currentHeaders = { ...form.getValues('transport_settings.tcp_settings.request.headers') }
                                           delete currentHeaders[key]
@@ -2066,7 +2116,7 @@ const HostModal: React.FC<HostModalProps> = ({ isDialogOpen, onOpenChange, onSub
                                         type="button"
                                         variant="ghost"
                                         size="icon"
-                                        className="h-8 w-8 shrink-0 border-red-500/20 transition-colors hover:border-red-500 hover:bg-red-50 dark:hover:bg-red-950/20"
+                                        className="h-8 w-8 shrink-0 border-red-500/20 hover:border-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors"
                                         onClick={() => {
                                           const currentHeaders = { ...form.getValues('transport_settings.tcp_settings.response.headers') }
                                           delete currentHeaders[key]
@@ -2212,15 +2262,32 @@ const HostModal: React.FC<HostModalProps> = ({ isDialogOpen, onOpenChange, onSub
                                   </PopoverContent>
                                 </Popover>
                               </div>
-                              <Button type="button" variant="outline" size="icon" className="h-6 w-6" onClick={addNoiseSetting} title={t('hostsDialog.noise.addNoise')}>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="icon"
+                                className="h-6 w-6"
+                                onClick={addNoiseSetting}
+                                title={t('hostsDialog.noise.addNoise')}
+                              >
                                 <Plus className="h-4 w-4" />
                               </Button>
                             </div>
                             <div className="space-y-2">
                               {noiseSettings.map((_, index) => (
-                                <NoiseItem key={index} index={index} form={form} onRemove={removeNoiseSetting} t={t} />
+                                <NoiseItem
+                                  key={index}
+                                  index={index}
+                                  form={form}
+                                  onRemove={removeNoiseSetting}
+                                  t={t}
+                                />
                               ))}
-                              {noiseSettings.length === 0 && <div className="py-8 text-center text-sm text-muted-foreground">{t('hostsDialog.noise.noNoiseSettings')}</div>}
+                              {noiseSettings.length === 0 && (
+                                <div className="text-center py-8 text-muted-foreground text-sm">
+                                  {t('hostsDialog.noise.noNoiseSettings')}
+                                </div>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -2261,7 +2328,7 @@ const HostModal: React.FC<HostModalProps> = ({ isDialogOpen, onOpenChange, onSub
                                             placeholder="e.g. 100"
                                             {...field}
                                             value={field.value ? field.value.replace('ms', '') : ''}
-                                            onChange={e => {
+                                            onChange={(e) => {
                                               const value = e.target.value
                                               field.onChange(value)
                                             }}
@@ -2328,7 +2395,7 @@ const HostModal: React.FC<HostModalProps> = ({ isDialogOpen, onOpenChange, onSub
                                     <div onClick={e => e.stopPropagation()}>
                                       <Switch
                                         checked={field.value || false}
-                                        onCheckedChange={checked => {
+                                        onCheckedChange={(checked) => {
                                           field.onChange(checked)
                                           if (checked) {
                                             // Disable other mux settings when enabling this one
@@ -2417,7 +2484,7 @@ const HostModal: React.FC<HostModalProps> = ({ isDialogOpen, onOpenChange, onSub
                                     <div onClick={e => e.stopPropagation()}>
                                       <Switch
                                         checked={field.value || false}
-                                        onCheckedChange={checked => {
+                                        onCheckedChange={(checked) => {
                                           field.onChange(checked)
                                           if (checked) {
                                             // Disable other mux settings when enabling this one
@@ -2588,7 +2655,7 @@ const HostModal: React.FC<HostModalProps> = ({ isDialogOpen, onOpenChange, onSub
                                     <div onClick={e => e.stopPropagation()}>
                                       <Switch
                                         checked={field.value || false}
-                                        onCheckedChange={checked => {
+                                        onCheckedChange={(checked) => {
                                           field.onChange(checked)
                                           if (checked) {
                                             // Disable other mux settings when enabling this one
@@ -2787,7 +2854,13 @@ const HostModal: React.FC<HostModalProps> = ({ isDialogOpen, onOpenChange, onSub
               <Button type="button" variant="outline" onClick={() => handleModalOpenChange(false)}>
                 {t('cancel')}
               </Button>
-              <LoaderButton type="submit" disabled={form.formState.isSubmitting} isLoading={form.formState.isSubmitting} loadingText={editingHost ? t('modifying') : t('creating')} size="sm">
+              <LoaderButton
+                type="submit"
+                disabled={form.formState.isSubmitting}
+                isLoading={form.formState.isSubmitting}
+                loadingText={editingHost ? t('modifying') : t('creating')}
+                size="sm"
+              >
                 {editingHost ? t('modify') : t('create')}
               </LoaderButton>
             </div>
